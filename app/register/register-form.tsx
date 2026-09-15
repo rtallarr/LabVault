@@ -10,6 +10,7 @@ export default function RegisterForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState("");
 
   const handleRegister: SubmitEventHandler<HTMLFormElement> = async (event) => {
@@ -17,6 +18,11 @@ export default function RegisterForm() {
 
     setError("");
     setMessage("");
+
+    if (password !== confirmPassword) {
+      setError("Passwords do not match.");
+      return;
+    }
 
     const { data, error } = await supabase.auth.signUp({
       email,
@@ -33,7 +39,9 @@ export default function RegisterForm() {
       return;
     }
 
-    setMessage("Check your email to confirm your account.");
+    setMessage(
+      "If the email can be registered, you'll receive a confirmation email.",
+    );
   };
 
   return (
@@ -59,6 +67,17 @@ export default function RegisterForm() {
             type="password"
             value={password}
             onChange={(event) => setPassword(event.target.value)}
+            required
+          />
+        </div>
+
+        <div>
+          <label htmlFor="confirm-password">Confirm password</label>
+          <input
+            id="confirm-password"
+            type="password"
+            value={confirmPassword}
+            onChange={(event) => setConfirmPassword(event.target.value)}
             required
           />
         </div>

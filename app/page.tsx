@@ -1,5 +1,5 @@
-import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { Navbar } from "@/app/components/navbar";
 
 export default async function Home() {
   const supabase = await createClient();
@@ -9,25 +9,14 @@ export default async function Home() {
   } = await supabase.auth.getUser();
 
   return (
-    <main>
-      <h1>Medical App</h1>
+    <>
+      <Navbar email={user?.email} />
 
-      <p>Personal medical information tracker.</p>
+      <main>
+        <h1>Medical App</h1>
 
-      <p>Logged in as {user?.email}</p>
-
-      <form
-        action={async () => {
-          "use server";
-
-          const supabase = await createClient();
-          await supabase.auth.signOut();
-
-          redirect("/login");
-        }}
-      >
-        <button type="submit">Logout</button>
-      </form>
-    </main>
+        <p>Personal medical information tracker.</p>
+      </main>
+    </>
   );
 }
