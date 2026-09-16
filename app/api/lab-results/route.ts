@@ -17,25 +17,135 @@ export async function POST(request: Request) {
 
   const body = await request.json();
 
-  const { lab_test_id, value, measured_at } = body;
+  const {
+    results,
+    measured_at,
+    healthcare_provider,
+  } = body;
 
-  if (!lab_test_id || value === undefined || !measured_at) {
+  if (
+    !Array.isArray(results) ||
+    results.length === 0 ||
+    !measured_at
+  ) {
     return NextResponse.json(
       { error: "Missing required fields" },
       { status: 400 },
     );
   }
 
+  const invalidResult = results.some(
+    (result) =>
+      !result.lab_test_id ||
+      result.value === undefined ||
+      typeof result.value !== "number" ||
+      Number.isNaN(result.value),
+  );
+
+  if (invalidResult) {
+    return NextResponse.json(
+      { error: "Invalid lab result" },
+      { status: 400 },
+    );
+  }
+
+  const labTestIds = results.map(
+    (result) => result.lab_test_id,
+  );
+
+  const uniqueLabTestIds = new Set(labTestIds);
+
+  if (uniqueLabTestIds.size !== labTestIds.length) {
+    return NextResponse.json(
+      { error: "The same lab test cannot be included more than once" },
+      { status: 400 },
+    );
+  }
+
+  const { data: labTests, error: labTestsError } = await supabase
+    .from("lab_tests")
+    .select("id, is_calculated")
+    .in("id", labTestIds);
+
+  if (labTestsError) {
+    return NextResponse.json(
+      { error: labTestsError.message },
+      { status: 400 },
+    );
+  }
+
+  if (labTests.length !== labTestIds.length) {
+    return NextResponse.json(
+      { error: "One or more lab tests do not exist" },
+      { status: 400 },
+    );
+  }
+
+  const hasCalculatedTest = labTests.some(
+    (test) => test.is_calculated,
+  );
+
+  if (hasCalculatedTest) {
+    return NextResponse.json(
+      {
+        error:
+          "Calculated lab tests cannot be entered manually",
+      },
+      { status: 400 },
+    );
+  }
+
+  let healthcareProviderId: string | null = null;
+
+  if (healthcare_provider) {
+    const { data: provider, error: providerError } = await supabase
+      .from("healthcare_providers")
+      .select("id")
+      .eq("name", healthcare_provider)
+      .maybeSingle();
+
+    if (providerError) {
+      return NextResponse.json(
+        { error: providerError.message },
+        { status: 400 },
+      );
+    }
+
+    if (provider) {
+      healthcareProviderId = provider.id;
+    } else {
+      const { data: newProvider, error: createProviderError } =
+        await supabase
+          .from("healthcare_providers")
+          .insert({
+            name: healthcare_provider,
+          })
+          .select("id")
+          .single();
+
+      if (createProviderError) {
+        return NextResponse.json(
+          { error: createProviderError.message },
+          { status: 400 },
+        );
+      }
+
+      healthcareProviderId = newProvider.id;
+    }
+  }
+
+  const labResults = results.map((result) => ({
+    user_id: user.id,
+    lab_test_id: result.lab_test_id,
+    value: result.value,
+    measured_at,
+    healthcare_provider_id: healthcareProviderId || null,
+  }));
+
   const { data, error } = await supabase
     .from("lab_results")
-    .insert({
-      user_id: user.id,
-      lab_test_id,
-      value,
-      measured_at,
-    })
-    .select()
-    .single();
+    .insert(labResults)
+    .select();
 
   if (error) {
     return NextResponse.json(

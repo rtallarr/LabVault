@@ -7,16 +7,31 @@ import Link from "next/link";
 type LabTest = {
   id: string;
   name: string;
+  abbreviation: string | null;
   unit: string | null;
+  is_calculated: boolean;
+};
+
+type ResultRow = {
+  id: string;
+  labTestId: string;
+  value: string;
 };
 
 export default function NewLabResultPage() {
   const router = useRouter();
 
   const [labTests, setLabTests] = useState<LabTest[]>([]);
-  const [labTestId, setLabTestId] = useState("");
-  const [value, setValue] = useState("");
+  const [rows, setRows] = useState<ResultRow[]>([
+    {
+      id: crypto.randomUUID(),
+      labTestId: "",
+      value: "",
+    },
+  ]);
+
   const [measuredAt, setMeasuredAt] = useState("");
+  const [healthcareProvider, setHealthcareProvider] = useState("");
 
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
@@ -48,12 +63,73 @@ export default function NewLabResultPage() {
     loadLabTests();
   }, []);
 
+  function addRow() {
+    setRows((current) => [
+      ...current,
+      {
+        id: crypto.randomUUID(),
+        labTestId: "",
+        value: "",
+      },
+    ]);
+  }
+
+  function removeRow(id: string) {
+    setRows((current) => {
+      if (current.length === 1) {
+        return current;
+      }
+
+      return current.filter((row) => row.id !== id);
+    });
+  }
+
+  function updateRow(
+    id: string,
+    field: "labTestId" | "value",
+    value: string,
+  ) {
+    setRows((current) =>
+      current.map((row) =>
+        row.id === id
+          ? {
+              ...row,
+              [field]: value,
+            }
+          : row,
+      ),
+    );
+  }
+
+  function getLabTest(labTestId: string) {
+    return labTests.find((test) => test.id === labTestId);
+  }
+
   async function handleSubmit(
     event: FormEvent<HTMLFormElement>,
   ) {
     event.preventDefault();
 
     setError(null);
+
+    const incompleteRow = rows.some(
+      (row) => !row.labTestId || row.value === "",
+    );
+
+    if (incompleteRow) {
+      setError("Please complete all test results.");
+      return;
+    }
+
+    const duplicateTests = new Set(
+      rows.map((row) => row.labTestId),
+    );
+
+    if (duplicateTests.size !== rows.length) {
+      setError("The same lab test cannot be added twice.");
+      return;
+    }
+
     setSubmitting(true);
 
     try {
@@ -63,9 +139,12 @@ export default function NewLabResultPage() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          lab_test_id: labTestId,
-          value: Number(value),
           measured_at: measuredAt,
+          healthcare_provider: healthcareProvider || null,
+          results: rows.map((row) => ({
+            lab_test_id: row.labTestId,
+            value: Number(row.value),
+          })),
         }),
       });
 
@@ -73,7 +152,7 @@ export default function NewLabResultPage() {
 
       if (!response.ok) {
         throw new Error(
-          data.error ?? "Failed to create lab result",
+          data.error ?? "Failed to create lab results",
         );
       }
 
@@ -98,24 +177,7 @@ export default function NewLabResultPage() {
           <div className="mt-8 h-7 w-48 rounded bg-neutral-800" />
           <div className="mt-2 h-4 w-64 rounded bg-neutral-900" />
 
-          <div className="mt-8 rounded-xl border border-neutral-800 bg-neutral-950 p-6">
-            <div className="space-y-6">
-              <div>
-                <div className="h-4 w-20 rounded bg-neutral-800" />
-                <div className="mt-2 h-10 rounded-lg bg-neutral-900" />
-              </div>
-
-              <div>
-                <div className="h-4 w-16 rounded bg-neutral-800" />
-                <div className="mt-2 h-10 rounded-lg bg-neutral-900" />
-              </div>
-
-              <div>
-                <div className="h-4 w-28 rounded bg-neutral-800" />
-                <div className="mt-2 h-10 rounded-lg bg-neutral-900" />
-              </div>
-            </div>
-          </div>
+          <div className="mt-8 h-96 rounded-xl border border-neutral-800 bg-neutral-950" />
         </div>
       </main>
     );
@@ -132,11 +194,11 @@ export default function NewLabResultPage() {
         </Link>
 
         <h1 className="mt-6 text-2xl font-semibold tracking-tight text-white">
-          Add lab result
+          Add lab results
         </h1>
 
         <p className="mt-1 text-sm text-neutral-500">
-          Record a laboratory test result.
+          Add multiple laboratory results from the same report.
         </p>
       </div>
 
@@ -144,81 +206,164 @@ export default function NewLabResultPage() {
         onSubmit={handleSubmit}
         className="rounded-xl border border-neutral-800 bg-neutral-950 p-6"
       >
-        <div className="space-y-6">
-          <div>
-            <label
-              htmlFor="lab-test"
-              className="mb-2 block text-sm font-medium text-neutral-300"
-            >
-              Lab test
-            </label>
+        <div className="space-y-8">
+          <div className="grid gap-6 sm:grid-cols-2">
+            <div>
+              <label
+                htmlFor="measured-at"
+                className="mb-2 block text-sm font-medium text-neutral-300"
+              >
+                Date measured
+              </label>
 
-            <select
-              id="lab-test"
-              value={labTestId}
-              onChange={(event) =>
-                setLabTestId(event.target.value)
-              }
-              required
-              className="w-full rounded-lg border border-neutral-800 bg-neutral-900 px-3 py-2.5 text-sm text-white outline-none transition focus:border-neutral-600 focus:ring-1 focus:ring-neutral-600"
-            >
-              <option value="" className="bg-neutral-900">
-                Select a test
-              </option>
+              <input
+                id="measured-at"
+                type="date"
+                value={measuredAt}
+                onChange={(event) =>
+                  setMeasuredAt(event.target.value)
+                }
+                required
+                className="w-full rounded-lg border border-neutral-800 bg-neutral-900 px-3 py-2.5 text-sm text-white outline-none transition focus:border-neutral-600 focus:ring-1 focus:ring-neutral-600"
+              />
+            </div>
 
-              {labTests.map((test) => (
-                <option
-                  key={test.id}
-                  value={test.id}
-                  className="bg-neutral-900"
-                >
-                  {test.name}
-                  {test.unit ? ` (${test.unit})` : ""}
-                </option>
-              ))}
-            </select>
+            <div>
+              <label
+                htmlFor="healthcare-provider"
+                className="mb-2 block text-sm font-medium text-neutral-300"
+              >
+                Healthcare provider
+              </label>
+
+              <input
+                id="healthcare-provider"
+                type="text"
+                value={healthcareProvider}
+                onChange={(event) =>
+                  setHealthcareProvider(event.target.value)
+                }
+                placeholder="Optional"
+                className="w-full rounded-lg border border-neutral-800 bg-neutral-900 px-3 py-2.5 text-sm text-white outline-none transition placeholder:text-neutral-600 focus:border-neutral-600 focus:ring-1 focus:ring-neutral-600"
+              />
+            </div>
           </div>
 
           <div>
-            <label
-              htmlFor="value"
-              className="mb-2 block text-sm font-medium text-neutral-300"
-            >
-              Result
-            </label>
+            <div className="mb-3 flex items-center justify-between">
+              <div>
+                <h2 className="text-sm font-medium text-neutral-300">
+                  Results
+                </h2>
 
-            <input
-              id="value"
-              type="number"
-              step="any"
-              value={value}
-              onChange={(event) =>
-                setValue(event.target.value)
-              }
-              placeholder="Enter the result"
-              required
-              className="w-full rounded-lg border border-neutral-800 bg-neutral-900 px-3 py-2.5 text-sm text-white outline-none transition placeholder:text-neutral-600 focus:border-neutral-600 focus:ring-1 focus:ring-neutral-600"
-            />
-          </div>
+                <p className="mt-1 text-xs text-neutral-600">
+                  Add the measured values from your report.
+                </p>
+              </div>
+            </div>
 
-          <div>
-            <label
-              htmlFor="measured-at"
-              className="mb-2 block text-sm font-medium text-neutral-300"
-            >
-              Date measured
-            </label>
+            <div className="overflow-hidden rounded-lg border border-neutral-800">
+              <div className="hidden grid-cols-[1fr_220px_40px] gap-3 border-b border-neutral-800 bg-neutral-900/50 px-4 py-3 text-xs font-medium text-neutral-500 sm:grid">
+                <span>Lab test</span>
+                <span>Result</span>
+                <span />
+              </div>
 
-            <input
-              id="measured-at"
-              type="date"
-              value={measuredAt}
-              onChange={(event) =>
-                setMeasuredAt(event.target.value)
-              }
-              required
-              className="w-full rounded-lg border border-neutral-800 bg-neutral-900 px-3 py-2.5 text-sm text-white outline-none transition focus:border-neutral-600 focus:ring-1 focus:ring-neutral-600"
-            />
+              <div className="divide-y divide-neutral-800">
+                {rows.map((row) => {
+                  const selectedTest = getLabTest(row.labTestId);
+
+                  return (
+                    <div
+                      key={row.id}
+                      className="grid gap-3 p-4 sm:grid-cols-[1fr_220px_40px] sm:items-center"
+                    >
+                      <div>
+                        <label className="mb-2 block text-xs text-neutral-600 sm:hidden">
+                          Lab test
+                        </label>
+
+                        <select
+                          value={row.labTestId}
+                          onChange={(event) =>
+                            updateRow(
+                              row.id,
+                              "labTestId",
+                              event.target.value,
+                            )
+                          }
+                          required
+                          className="w-full appearance-none rounded-lg border border-neutral-800 bg-neutral-900 px-3 py-2.5 text-sm text-white outline-none transition focus:border-neutral-600 focus:ring-1 focus:ring-neutral-600"
+                        >
+                          <option value="">
+                            Select a test
+                          </option>
+
+                          {labTests
+                            .filter(
+                              (test) => !test.is_calculated,
+                            )
+                            .map((test) => (
+                              <option
+                                key={test.id}
+                                value={test.id}
+                              >
+                                {test.name} {test.abbreviation ? `(${test.abbreviation})` : ""}
+                              </option>
+                            ))}
+                        </select>
+                      </div>
+
+                      <div>
+                        <label className="mb-2 block text-xs text-neutral-600 sm:hidden">
+                          Result
+                        </label>
+
+                        <div className="flex items-center gap-2">
+                          <input
+                            type="number"
+                            value={row.value}
+                            onChange={(event) =>
+                              updateRow(
+                                row.id,
+                                "value",
+                                event.target.value,
+                              )
+                            }
+                            placeholder="Value"
+                            required
+                            className="w-32 shrink-0 rounded-lg border border-neutral-800 bg-neutral-900 px-3 py-2.5 text-right text-sm text-white outline-none transition placeholder:text-neutral-600 focus:border-neutral-600 focus:ring-1 focus:ring-neutral-600 [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                          />
+
+                          {selectedTest?.unit && (
+                            <span className="shrink-0 text-sm text-neutral-500">
+                              {selectedTest.unit}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={() => removeRow(row.id)}
+                        disabled={rows.length === 1}
+                        aria-label="Remove test"
+                        className="rounded-lg px-2 py-2 text-neutral-600 transition hover:bg-neutral-900 hover:text-red-400 disabled:cursor-not-allowed disabled:opacity-30"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+              <button
+                type="button"
+                onClick={addRow}
+                className="mt-3 w-full rounded-lg border border-dashed border-neutral-800 px-3 py-2.5 text-left text-sm text-neutral-500 transition hover:border-neutral-700 hover:bg-neutral-900/50 hover:text-neutral-300"
+              >
+                + Add test
+              </button>
+            </div>
           </div>
 
           {error && (
@@ -243,7 +388,9 @@ export default function NewLabResultPage() {
               disabled={submitting}
               className="rounded-lg bg-white px-4 py-2.5 text-sm font-medium text-black transition hover:bg-neutral-200 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              {submitting ? "Adding..." : "Add result"}
+              {submitting
+                ? "Adding..."
+                : `Add ${rows.length} result${rows.length === 1 ? "" : "s"}`}
             </button>
           </div>
         </div>
