@@ -1,5 +1,4 @@
 import { createClient } from "@/lib/supabase/server";
-import { Navbar } from "@/app/components/navbar";
 
 export default async function Home() {
   const supabase = await createClient();
@@ -10,8 +9,6 @@ export default async function Home() {
 
   return (
     <>
-      <Navbar email={user?.email} />
-
       <main>
         <h1>Medical App</h1>
 
