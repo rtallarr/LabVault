@@ -1,84 +1,104 @@
 [
   {
-    "name": "recuento de eritrocitos",
-    "abbreviation": "ERIT",
+    "name": "Recuento de eritrocitos",
     "category": "hemograma",
     "specimen": "blood",
     "unit": "10^6/uL",
     "reference_range_min": 4.43,
-    "reference_range_max": 5.93
+    "reference_range_max": 5.93,
+    "is_calculated": false
   },
   {
-    "name": "hematocrito",
+    "name": "Hematocrito",
     "abbreviation": "HCT",
     "category": "hemograma",
     "specimen": "blood",
     "unit": "%",
     "reference_range_min": 41.1,
-    "reference_range_max": 52.7
+    "reference_range_max": 52.7,
+    "is_calculated": false
   },
   {
-    "name": "hemoglobina",
+    "name": "Hemoglobina",
     "abbreviation": "HGB",
     "category": "hemograma",
     "specimen": "blood",
     "unit": "g/dL",
     "reference_range_min": 13.6,
-    "reference_range_max": 17.5
+    "reference_range_max": 17.5,
+    "is_calculated": false
   },
   {
     "name": "VCM",
-    "abbreviation": "VCM",
     "category": "hemograma",
     "specimen": "blood",
     "unit": "fL",
     "reference_range_min": 80,
-    "reference_range_max": 100
+    "reference_range_max": 100,
+    "is_calculated": false
   },
   {
     "name": "HCM",
-    "abbreviation": "HCM",
     "category": "hemograma",
     "specimen": "blood",
     "unit": "pg",
     "reference_range_min": 26,
-    "reference_range_max": 34
+    "reference_range_max": 34,
+    "is_calculated": false
   },
   {
     "name": "CHCM",
-    "abbreviation": "CHCM",
     "category": "hemograma",
     "specimen": "blood",
     "unit": "g/dL",
     "reference_range_min": 31,
-    "reference_range_max": 36
+    "reference_range_max": 36,
+    "is_calculated": false
+  },
+  {
+    "name": "Neutrofilos",
+    "abbreviation": "RAN",
+    "category": "hemograma",
+    "specimen": "blood",
+    "unit": "xmm3",
+    "reference_range_min": 1500,
+    "is_calculated": false
   },
   {
     "name": "Recuento de plaquetas",
-    "abbreviation": "PLT",
     "category": "hemograma",
     "specimen": "blood",
     "unit": "/uL",
     "reference_range_min": 148000,
-    "reference_range_max": 329000
+    "reference_range_max": 329000,
+    "is_calculated": false
+  },
+  {
+    "name": "VHS",
+    "category": "hemograma",
+    "specimen": "blood",
+    "unit": "mm/Hr",
+    "reference_range_min": 0,
+    "reference_range_max": 15,
+    "is_calculated": false
   },
   {
     "name": "Glucosa",
-    "abbreviation": "GLU",
     "category": "metabolismo",
     "specimen": "blood",
     "unit": "mg/dL",
     "reference_range_min": 70,
-    "reference_range_max": 99
+    "reference_range_max": 99,
+    "is_calculated": false
   },
   {
-    "name": "hemoglobina glicosilada",
+    "name": "Hemoglobina glicosilada",
     "abbreviation": "HBA1C",
     "category": "metabolismo",
     "specimen": "blood",
     "unit": "%",
-    "reference_range_min": null,
-    "reference_range_max": 5.7
+    "reference_range_max": 5.7,
+    "is_calculated": false
   },
   {
     "name": "Colesterol Total",
@@ -86,8 +106,8 @@
     "category": "metabolismo",
     "specimen": "blood",
     "unit": "mg/dL",
-    "reference_range_min": 0,
-    "reference_range_max": 199
+    "reference_range_max": 199,
+    "is_calculated": false
   },
   {
     "name": "Colesterol HDL",
@@ -96,7 +116,7 @@
     "specimen": "blood",
     "unit": "mg/dL",
     "reference_range_min": 40,
-    "reference_range_max": null
+    "is_calculated": false
   },
   {
     "name": "Colesterol LDL",
@@ -104,17 +124,33 @@
     "category": "metabolismo",
     "specimen": "blood",
     "unit": "mg/dL",
-    "reference_range_min": 0,
-    "reference_range_max": 99
+    "reference_range_max": 99,
+    "is_calculated": false
   },
   {
-    "name": "trigliceridos",
-    "abbreviation": "TRIG",
+    "name": "Trigliceridos",
     "category": "metabolismo",
     "specimen": "blood",
     "unit": "mg/dL",
-    "reference_range_min": null,
-    "reference_range_max": null
+    "is_calculated": false
+  },
+  {
+    "name": "Vitamina B12",
+    "category": "metabolismo",
+    "specimen": "blood",
+    "unit": "pg/mL",
+    "reference_range_min": 211,
+    "reference_range_max": 911,
+    "is_calculated": false
+  },
+  {
+    "name": "Vitamina D",
+    "category": "metabolismo",
+    "specimen": "blood",
+    "unit": "pg/mL",
+    "reference_range_min": 30,
+    "reference_range_max": 100,
+    "is_calculated": false
   },
   {
     "name": "Sodio",
@@ -123,7 +159,8 @@
     "specimen": "blood",
     "unit": "mEq/L",
     "reference_range_min": 136,
-    "reference_range_max": 145
+    "reference_range_max": 145,
+    "is_calculated": false
   },
   {
     "name": "Potasio",
@@ -132,7 +169,8 @@
     "specimen": "blood",
     "unit": "mEq/L",
     "reference_range_min": 3.5,
-    "reference_range_max": 5.1
+    "reference_range_max": 5.1,
+    "is_calculated": false
   },
   {
     "name": "Cloro",
@@ -141,7 +179,8 @@
     "specimen": "blood",
     "unit": "mEq/L",
     "reference_range_min": 98,
-    "reference_range_max": 107
+    "reference_range_max": 107,
+    "is_calculated": false
   },
   {
     "name": "Calcio",
@@ -150,7 +189,8 @@
     "specimen": "blood",
     "unit": "mEq/L",
     "reference_range_min": 3.5,
-    "reference_range_max": 5.1
+    "reference_range_max": 5.1,
+    "is_calculated": false
   },
   {
     "name": "Fosforo",
@@ -159,7 +199,8 @@
     "specimen": "blood",
     "unit": "mEq/L",
     "reference_range_min": 3.5,
-    "reference_range_max": 5.1
+    "reference_range_max": 5.1,
+    "is_calculated": false
   },
   {
     "name": "Magnesio",
@@ -168,33 +209,117 @@
     "specimen": "blood",
     "unit": "mEq/L",
     "reference_range_min": 3.5,
-    "reference_range_max": 5.1
+    "reference_range_max": 5.1,
+    "is_calculated": false
   },
   {
-    "name": "aspartato aminotransferasa",
+    "name": "Aspartato aminotransferasa",
     "abbreviation": "AST/GOT",
     "category": "hepatico",
     "specimen": "blood",
     "unit": "U/L",
     "reference_range_min": 0,
-    "reference_range_max": 40
+    "reference_range_max": 40,
+    "is_calculated": false
   },
   {
-    "name": "alanina aminotransferasa",
+    "name": "Alanina aminotransferasa",
     "abbreviation": "ALT/GPT",
     "category": "hepatico",
     "specimen": "blood",
     "unit": "U/L",
     "reference_range_min": 7,
-    "reference_range_max": 40
+    "reference_range_max": 40,
+    "is_calculated": false
   },
-    {
-    "name": "creatinquinasa total",
-    "abbreviation": "CK-Total",
+  {
+    "name": "Albumina",
     "category": "hepatico",
+    "specimen": "blood",
+    "unit": "g/dL",
+    "reference_range_min": 3.4,
+    "reference_range_max": 5.1,
+    "is_calculated": false
+  },
+  {
+    "name": "Creatinquinasa total",
+    "abbreviation": "CK-Total",
+    "category": "marcadores",
     "specimen": "blood",
     "unit": "U/L",
     "reference_range_min": 7,
-    "reference_range_max": 40
+    "reference_range_max": 40,
+    "is_calculated": false
+  },
+  {
+    "name": "Proteina C reactiva",
+    "abbreviation": "PCR",
+    "category": "marcadores",
+    "specimen": "blood",
+    "unit": "U/L",
+    "reference_range_min": 7,
+    "reference_range_max": 40,
+    "is_calculated": false
+  },
+  {
+    "name": "Acido lactico",
+    "category": "marcadores",
+    "specimen": "blood",
+    "unit": "U/L",
+    "reference_range_min": 7,
+    "reference_range_max": 40,
+    "is_calculated": false
+  },
+  {
+    "name": "Dimero D",
+    "category": "marcadores",
+    "specimen": "blood",
+    "unit": "U/L",
+    "reference_range_min": 7,
+    "reference_range_max": 40,
+    "is_calculated": false
+  },
+  {
+    "name": "LDH",
+    "category": "marcadores",
+    "specimen": "blood",
+    "unit": "U/L",
+    "reference_range_min": 120,
+    "reference_range_max": 246,
+    "is_calculated": false
+  },
+  {
+    "name": "Creatinina",
+    "category": "renal",
+    "specimen": "blood",
+    "unit": "U/L",
+    "reference_range_min": 0.64,
+    "reference_range_max": 1.23,
+    "is_calculated": false
+  },
+  {
+    "name": "Nitrogeno ureico",
+    "abbreviation": "BUN",
+    "category": "renal",
+    "specimen": "blood",
+    "unit": "U/L",
+    "reference_range_min": 120,
+    "reference_range_max": 246,
+    "is_calculated": false
+  },
+  {
+    "name": "Acido urico",
+    "category": "renal",
+    "specimen": "blood",
+    "unit": "mg/dL",
+    "reference_range_min": 3.7,
+    "reference_range_max": 9.2,
+    "is_calculated": false
+  },
+  {
+    "name": "VFGe",
+    "category": "renal",
+    "specimen": "blood",
+    "is_calculated": true
   }
 ]
