@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 
 type Measurement = {
   id: string;
@@ -23,6 +23,11 @@ type LabTest = {
 type LabCategory = {
   category: string;
   tests: LabTest[];
+};
+
+type LabSpecimen = {
+  specimen: string;
+  categories: LabCategory[];
 };
 
 function formatDate(date: string) {
@@ -82,6 +87,42 @@ export default function LabResultsPage() {
     );
   }
 
+  const specimens: LabSpecimen[] = [];
+
+  for (const category of results) {
+    for (const test of category.tests) {
+      const specimen = test.specimen ?? "Other";
+
+      let specimenGroup = specimens.find(
+        (group) => group.specimen === specimen,
+      );
+
+      if (!specimenGroup) {
+        specimenGroup = {
+          specimen,
+          categories: [],
+        };
+
+        specimens.push(specimenGroup);
+      }
+
+      let categoryGroup = specimenGroup.categories.find(
+        (group) => group.category === category.category,
+      );
+
+      if (!categoryGroup) {
+        categoryGroup = {
+          category: category.category,
+          tests: [],
+        };
+
+        specimenGroup.categories.push(categoryGroup);
+      }
+
+      categoryGroup.tests.push(test);
+    }
+  }
+
   return (
     <main className="mx-auto w-full max-w-6xl px-8 py-10">
       <div className="mb-8 flex items-center justify-between">
@@ -132,11 +173,12 @@ export default function LabResultsPage() {
         </div>
       ) : (
         <div className="space-y-8">
-          {results.map((category) => (
-            <section key={category.category}>
+          {specimens.map((specimen) => (
+            <section key={specimen.specimen}>
+              {/* Specimen separator */}
               <div className="mb-3">
                 <h2 className="text-sm font-medium uppercase tracking-wider text-neutral-400">
-                  {category.category}
+                  {specimen.specimen}
                 </h2>
               </div>
 
@@ -145,109 +187,125 @@ export default function LabResultsPage() {
                   <table className="w-full min-w-[720px] text-left">
                     <thead className="border-b border-neutral-800 bg-neutral-900/50">
                       <tr>
-                        <th className="px-6 py-4 text-xs font-medium uppercase tracking-wider text-neutral-500">
+                        <th className="px-4 py-3 text-xs font-medium uppercase tracking-wider text-neutral-500">
                           Test
                         </th>
 
-                        <th className="px-6 py-4 text-xs font-medium uppercase tracking-wider text-neutral-500">
+                        <th className="px-4 py-3 text-xs font-medium uppercase tracking-wider text-neutral-500">
                           Latest
                         </th>
 
-                        <th className="px-6 py-4 text-xs font-medium uppercase tracking-wider text-neutral-500">
+                        <th className="px-4 py-3 text-xs font-medium uppercase tracking-wider text-neutral-500">
                           Previous
                         </th>
 
-                        <th className="hidden px-6 py-4 text-xs font-medium uppercase tracking-wider text-neutral-500 lg:table-cell">
-                          Previous
+                        <th className="hidden px-4 py-3 text-xs font-medium uppercase tracking-wider text-neutral-500 lg:table-cell">
+                          Older
                         </th>
 
-                        <th className="px-6 py-4 text-xs font-medium uppercase tracking-wider text-neutral-500">
+                        <th className="px-4 py-3 text-xs font-medium uppercase tracking-wider text-neutral-500">
                           Reference
                         </th>
                       </tr>
                     </thead>
 
-                    <tbody className="divide-y divide-neutral-800">
-                      {category.tests.map((test) => {
-                        const hasReferenceRange =
-                          test.reference_range_min !== null ||
-                          test.reference_range_max !== null;
-
-                        const referenceRange = hasReferenceRange
-                          ? `${test.reference_range_min ?? "—"} – ${
-                              test.reference_range_max ?? "—"
-                            }`
-                          : "—";
-
-                        return (
+                    <tbody>
+                      {specimen.categories.map((category) => (
+                        <Fragment key={category.category}>
                           <tr
-                            key={test.id}
-                            className="transition hover:bg-neutral-900"
+                            key={category.category}
+                            className="border-y border-neutral-800 bg-neutral-900/30"
                           >
-                            <td className="px-6 py-5">
-                              <div className="font-medium text-white">
-                                {test.name}
-                              </div>
-
-                              {test.abbreviation && (
-                                <div className="mt-1 text-xs text-neutral-600">
-                                  {test.abbreviation}
-                                </div>
-                              )}
+                            <td
+                              colSpan={5}
+                              className="px-4 py-2 text-[11px] font-medium uppercase tracking-wider text-neutral-500"
+                            >
+                              {category.category}
                             </td>
+                          </tr>
 
-                            {[0, 1, 2].map((index) => {
-                              const measurement =
-                                test.measurements[index];
+                          {category.tests.map((test) => {
+                            const hasReferenceRange =
+                              test.reference_range_min !== null ||
+                              test.reference_range_max !== null;
 
-                              return (
-                                <td
-                                  key={index}
-                                  className={`px-6 py-5 ${
-                                    index === 2
-                                      ? "hidden lg:table-cell"
-                                      : ""
-                                  }`}
-                                >
-                                  {measurement ? (
-                                    <>
-                                      <div className="font-medium tabular-nums text-white">
-                                        {measurement.value}
+                            const referenceRange = hasReferenceRange
+                              ? `${test.reference_range_min ?? "—"} – ${
+                                  test.reference_range_max ?? "—"
+                                }`
+                              : "—";
 
-                                        {test.unit && (
-                                          <span className="ml-1 text-sm font-normal text-neutral-500">
-                                            {test.unit}
-                                          </span>
-                                        )}
-                                      </div>
+                            return (
+                              <tr
+                                key={test.id}
+                                className="border-b border-neutral-800 transition last:border-b-0 hover:bg-neutral-900"
+                              >
+                                <td className="px-4 py-3">
+                                  <div className="font-medium text-white">
+                                    {test.name}
+                                  </div>
 
-                                      <div className="mt-1 text-xs text-neutral-600">
-                                        {formatDate(
-                                          measurement.measured_at,
-                                        )}
-                                      </div>
-                                    </>
-                                  ) : (
-                                    <span className="text-neutral-700">
-                                      —
+                                  {test.abbreviation && (
+                                    <div className="mt-0.5 text-xs text-neutral-600">
+                                      {test.abbreviation}
+                                    </div>
+                                  )}
+                                </td>
+
+                                {[0, 1, 2].map((index) => {
+                                  const measurement =
+                                    test.measurements[index];
+
+                                  return (
+                                    <td
+                                      key={index}
+                                      className={`px-4 py-3 ${
+                                        index === 2
+                                          ? "hidden lg:table-cell"
+                                          : ""
+                                      }`}
+                                    >
+                                      {measurement ? (
+                                        <>
+                                          <div className="font-medium tabular-nums text-white">
+                                            {measurement.value}
+
+                                            {test.unit && (
+                                              <span className="ml-1 text-xs font-normal text-neutral-500">
+                                                {test.unit}
+                                              </span>
+                                            )}
+                                          </div>
+
+                                          <div className="mt-0.5 text-[11px] text-neutral-600">
+                                            {formatDate(
+                                              measurement.measured_at,
+                                            )}
+                                          </div>
+                                        </>
+                                      ) : (
+                                        <span className="text-neutral-700">
+                                          —
+                                        </span>
+                                      )}
+                                    </td>
+                                  );
+                                })}
+
+                                <td className="px-4 py-3 text-sm tabular-nums text-neutral-500">
+                                  {referenceRange}
+
+                                  {test.unit && (
+                                    <span className="ml-1 text-xs text-neutral-600">
+                                      {test.unit}
                                     </span>
                                   )}
                                 </td>
-                              );
-                            })}
-
-                            <td className="px-6 py-5 text-sm tabular-nums text-neutral-500">
-                              {referenceRange}
-
-                              {test.unit && (
-                                <span className="ml-1 text-xs text-neutral-600">
-                                  {test.unit}
-                                </span>
-                              )}
-                            </td>
-                          </tr>
-                        );
-                      })}
+                              </tr>
+                            );
+                          })}
+                        </Fragment>
+                      ))}
                     </tbody>
                   </table>
                 </div>
