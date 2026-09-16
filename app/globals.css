@@ -1,16 +1,23 @@
 @import "tailwindcss";
 
 :root {
-  --background: #111111;
+  --background: #0a0a0a;
   --foreground: #f5f5f5;
-  --border: #333333;
   --muted: #a3a3a3;
-  --input: #1a1a1a;
+  --border: #262626;
+  --surface: #111111;
+  --surface-hover: #171717;
+  --input: #111111;
   --primary: #f5f5f5;
 }
 
 * {
   box-sizing: border-box;
+}
+
+html,
+body {
+  min-height: 100%;
 }
 
 body {
@@ -20,91 +27,8 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-main {
-  width: min(100% - 2rem, 400px);
-  margin: 6rem auto;
-}
-
-h1 {
-  margin-bottom: 2rem;
-  font-size: 1.75rem;
-}
-
-form {
-  display: grid;
-  gap: 1rem;
-}
-
-form div {
-  display: grid;
-  gap: 0.4rem;
-}
-
-label {
-  font-size: 0.9rem;
-}
-
-input {
-  width: 100%;
-  padding: 0.65rem 0.75rem;
-  border: 1px solid var(--border);
-  border-radius: 0.4rem;
-  background: var(--input);
-  color: var(--foreground);
+button,
+input,
+select {
   font: inherit;
-}
-
-input:focus {
-  outline: 2px solid #666;
-  outline-offset: 1px;
-}
-
-button {
-  padding: 0.65rem 1rem;
-  border: 0;
-  border-radius: 0.4rem;
-  background: var(--primary);
-  color: #111111;
-  font: inherit;
-  cursor: pointer;
-}
-
-button:hover {
-  opacity: 0.85;
-}
-
-p {
-  line-height: 1.5;
-}
-
-a {
-  color: inherit;
-}
-
-form + p {
-  margin-top: 1.5rem;
-  color: var(--muted);
-  font-size: 0.9rem;
-}
-
-nav {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1rem 2rem;
-  border-bottom: 1px solid var(--border);
-}
-
-nav > div {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-nav form {
-  display: block;
-}
-
-nav button {
-  padding: 0.4rem 0.75rem;
 }
