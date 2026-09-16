@@ -88,17 +88,31 @@ export async function GET() {
     );
   }
 
-  const results = data.map((test) => ({
-    id: test.id,
-    name: test.name,
-    code: test.code,
-    category: test.category,
-    specimen: test.specimen,
-    unit: test.unit,
-    reference_range_min: test.reference_range_min,
-    reference_range_max: test.reference_range_max,
+  const groupedResults = new Map<
+    string,
+    {
+      category: string;
+      tests: {
+        id: string;
+        name: string;
+        code: string | null;
+        specimen: string | null;
+        unit: string | null;
+        reference_range_min: number | null;
+        reference_range_max: number | null;
+        measurements: {
+          id: string;
+          value: number;
+          measured_at: string;
+        }[];
+      }[];
+    }
+  >();
 
-    measurements: test.lab_results
+  for (const test of data) {
+    const category = test.category ?? "Other";
+
+    const measurements = test.lab_results
       .filter((result) => result.user_id === user.id)
       .sort(
         (a, b) =>
@@ -110,8 +124,28 @@ export async function GET() {
         id: result.id,
         value: Number(result.value),
         measured_at: result.measured_at,
-      })),
-  }));
+      }));
 
-  return NextResponse.json(results);
+    if (!groupedResults.has(category)) {
+      groupedResults.set(category, {
+        category,
+        tests: [],
+      });
+    }
+
+    groupedResults.get(category)!.tests.push({
+      id: test.id,
+      name: test.name,
+      code: test.code,
+      specimen: test.specimen,
+      unit: test.unit,
+      reference_range_min: test.reference_range_min,
+      reference_range_max: test.reference_range_max,
+      measurements,
+    });
+  }
+
+  return NextResponse.json(
+    Array.from(groupedResults.values()),
+  );
 }
