@@ -12,7 +12,7 @@ type Measurement = {
 type LabTest = {
   id: string;
   name: string;
-  code: string | null;
+  abbreviation: string | null;
   specimen: string | null;
   unit: string | null;
   reference_range_min: number | null;
@@ -189,9 +189,9 @@ export default function LabResultsPage() {
                                 {test.name}
                               </div>
 
-                              {test.code && (
+                              {test.abbreviation && (
                                 <div className="mt-1 text-xs text-neutral-600">
-                                  {test.code}
+                                  {test.abbreviation}
                                 </div>
                               )}
                             </td>

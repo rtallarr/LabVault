@@ -66,7 +66,7 @@ export async function GET() {
     .select(`
       id,
       name,
-      code,
+      abbreviation,
       category,
       specimen,
       unit,
@@ -95,7 +95,7 @@ export async function GET() {
       tests: {
         id: string;
         name: string;
-        code: string | null;
+        abbreviation: string | null;
         specimen: string | null;
         unit: string | null;
         reference_range_min: number | null;
@@ -136,7 +136,7 @@ export async function GET() {
     groupedResults.get(category)!.tests.push({
       id: test.id,
       name: test.name,
-      code: test.code,
+      abbreviation: test.abbreviation,
       specimen: test.specimen,
       unit: test.unit,
       reference_range_min: test.reference_range_min,

@@ -1,0 +1,200 @@
+[
+  {
+    "name": "recuento de eritrocitos",
+    "abbreviation": "ERIT",
+    "category": "hemograma",
+    "specimen": "blood",
+    "unit": "10^6/uL",
+    "reference_range_min": 4.43,
+    "reference_range_max": 5.93
+  },
+  {
+    "name": "hematocrito",
+    "abbreviation": "HCT",
+    "category": "hemograma",
+    "specimen": "blood",
+    "unit": "%",
+    "reference_range_min": 41.1,
+    "reference_range_max": 52.7
+  },
+  {
+    "name": "hemoglobina",
+    "abbreviation": "HGB",
+    "category": "hemograma",
+    "specimen": "blood",
+    "unit": "g/dL",
+    "reference_range_min": 13.6,
+    "reference_range_max": 17.5
+  },
+  {
+    "name": "VCM",
+    "abbreviation": "VCM",
+    "category": "hemograma",
+    "specimen": "blood",
+    "unit": "fL",
+    "reference_range_min": 80,
+    "reference_range_max": 100
+  },
+  {
+    "name": "HCM",
+    "abbreviation": "HCM",
+    "category": "hemograma",
+    "specimen": "blood",
+    "unit": "pg",
+    "reference_range_min": 26,
+    "reference_range_max": 34
+  },
+  {
+    "name": "CHCM",
+    "abbreviation": "CHCM",
+    "category": "hemograma",
+    "specimen": "blood",
+    "unit": "g/dL",
+    "reference_range_min": 31,
+    "reference_range_max": 36
+  },
+  {
+    "name": "Recuento de plaquetas",
+    "abbreviation": "PLT",
+    "category": "hemograma",
+    "specimen": "blood",
+    "unit": "/uL",
+    "reference_range_min": 148000,
+    "reference_range_max": 329000
+  },
+  {
+    "name": "Glucosa",
+    "abbreviation": "GLU",
+    "category": "metabolismo",
+    "specimen": "blood",
+    "unit": "mg/dL",
+    "reference_range_min": 70,
+    "reference_range_max": 99
+  },
+  {
+    "name": "hemoglobina glicosilada",
+    "abbreviation": "HBA1C",
+    "category": "metabolismo",
+    "specimen": "blood",
+    "unit": "%",
+    "reference_range_min": null,
+    "reference_range_max": 5.7
+  },
+  {
+    "name": "Colesterol Total",
+    "abbreviation": "CHOL",
+    "category": "metabolismo",
+    "specimen": "blood",
+    "unit": "mg/dL",
+    "reference_range_min": 0,
+    "reference_range_max": 199
+  },
+  {
+    "name": "Colesterol HDL",
+    "abbreviation": "HDL",
+    "category": "metabolismo",
+    "specimen": "blood",
+    "unit": "mg/dL",
+    "reference_range_min": 40,
+    "reference_range_max": null
+  },
+  {
+    "name": "Colesterol LDL",
+    "abbreviation": "LDL",
+    "category": "metabolismo",
+    "specimen": "blood",
+    "unit": "mg/dL",
+    "reference_range_min": 0,
+    "reference_range_max": 99
+  },
+  {
+    "name": "trigliceridos",
+    "abbreviation": "TRIG",
+    "category": "metabolismo",
+    "specimen": "blood",
+    "unit": "mg/dL",
+    "reference_range_min": null,
+    "reference_range_max": null
+  },
+  {
+    "name": "Sodio",
+    "abbreviation": "NA",
+    "category": "electrolitos",
+    "specimen": "blood",
+    "unit": "mEq/L",
+    "reference_range_min": 136,
+    "reference_range_max": 145
+  },
+  {
+    "name": "Potasio",
+    "abbreviation": "K",
+    "category": "electrolitos",
+    "specimen": "blood",
+    "unit": "mEq/L",
+    "reference_range_min": 3.5,
+    "reference_range_max": 5.1
+  },
+  {
+    "name": "Cloro",
+    "abbreviation": "Cl",
+    "category": "electrolitos",
+    "specimen": "blood",
+    "unit": "mEq/L",
+    "reference_range_min": 98,
+    "reference_range_max": 107
+  },
+  {
+    "name": "Calcio",
+    "abbreviation": "Ca",
+    "category": "electrolitos",
+    "specimen": "blood",
+    "unit": "mEq/L",
+    "reference_range_min": 3.5,
+    "reference_range_max": 5.1
+  },
+  {
+    "name": "Fosforo",
+    "abbreviation": "P",
+    "category": "electrolitos",
+    "specimen": "blood",
+    "unit": "mEq/L",
+    "reference_range_min": 3.5,
+    "reference_range_max": 5.1
+  },
+  {
+    "name": "Magnesio",
+    "abbreviation": "Mg",
+    "category": "electrolitos",
+    "specimen": "blood",
+    "unit": "mEq/L",
+    "reference_range_min": 3.5,
+    "reference_range_max": 5.1
+  },
+  {
+    "name": "aspartato aminotransferasa",
+    "abbreviation": "AST/GOT",
+    "category": "hepatico",
+    "specimen": "blood",
+    "unit": "U/L",
+    "reference_range_min": 0,
+    "reference_range_max": 40
+  },
+  {
+    "name": "alanina aminotransferasa",
+    "abbreviation": "ALT/GPT",
+    "category": "hepatico",
+    "specimen": "blood",
+    "unit": "U/L",
+    "reference_range_min": 7,
+    "reference_range_max": 40
+  },
+    {
+    "name": "creatinquinasa total",
+    "abbreviation": "CK-Total",
+    "category": "hepatico",
+    "specimen": "blood",
+    "unit": "U/L",
+    "reference_range_min": 7,
+    "reference_range_max": 40
+  }
+]

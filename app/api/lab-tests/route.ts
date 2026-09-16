@@ -20,7 +20,7 @@ export async function GET() {
     .select(`
       id,
       name,
-      code,
+      abbreviation,
       category,
       specimen,
       unit,
