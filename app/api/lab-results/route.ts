@@ -62,24 +62,24 @@ export async function GET() {
   }
 
   const { data, error } = await supabase
-    .from("lab_results")
+    .from("lab_tests")
     .select(`
       id,
-      value,
-      measured_at,
-      lab_tests (
+      name,
+      code,
+      category,
+      specimen,
+      unit,
+      reference_range_min,
+      reference_range_max,
+      lab_results (
         id,
-        name,
-        code,
-        category,
-        specimen,
-        unit,
-        reference_range_min,
-        reference_range_max
+        user_id,
+        value,
+        measured_at
       )
     `)
-    .eq("user_id", user.id)
-    .order("measured_at", { ascending: false });
+    .order("name");
 
   if (error) {
     return NextResponse.json(
@@ -88,5 +88,30 @@ export async function GET() {
     );
   }
 
-  return NextResponse.json(data);
+  const results = data.map((test) => ({
+    id: test.id,
+    name: test.name,
+    code: test.code,
+    category: test.category,
+    specimen: test.specimen,
+    unit: test.unit,
+    reference_range_min: test.reference_range_min,
+    reference_range_max: test.reference_range_max,
+
+    measurements: test.lab_results
+      .filter((result) => result.user_id === user.id)
+      .sort(
+        (a, b) =>
+          new Date(b.measured_at).getTime() -
+          new Date(a.measured_at).getTime(),
+      )
+      .slice(0, 3)
+      .map((result) => ({
+        id: result.id,
+        value: Number(result.value),
+        measured_at: result.measured_at,
+      })),
+  }));
+
+  return NextResponse.json(results);
 }
