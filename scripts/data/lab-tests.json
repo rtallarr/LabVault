@@ -1,14 +1,5 @@
 [
   {
-    "name": "Recuento de eritrocitos",
-    "category": "hemograma",
-    "specimen": "sangre",
-    "unit": "10^6/uL",
-    "reference_range_min": 4.43,
-    "reference_range_max": 5.93,
-    "is_calculated": false
-  },
-  {
     "name": "Hematocrito",
     "abbreviation": "HCT",
     "category": "hemograma",
@@ -56,12 +47,75 @@
     "is_calculated": false
   },
   {
+    "name": "RDW",
+    "category": "hemograma",
+    "specimen": "sangre",
+    "reference_range_min": 12.4,
+    "reference_range_max": 15,
+    "is_calculated": false
+  },
+  {
+    "name": "Eritrocitos",
+    "category": "hemograma",
+    "specimen": "sangre",
+    "unit": "10^6/uL",
+    "reference_range_min": 4.43,
+    "reference_range_max": 5.93,
+    "is_calculated": false
+  },
+  {
+    "name": "Leucocitos",
+    "category": "hemograma",
+    "specimen": "sangre",
+    "unit": "/uL",
+    "reference_range_min": 4400,
+    "reference_range_max": 11500,
+    "is_calculated": false
+  },
+  {
     "name": "Neutrofilos",
     "abbreviation": "RAN",
     "category": "hemograma",
     "specimen": "sangre",
     "unit": "xmm3",
     "reference_range_min": 1500,
+    "is_calculated": false
+  },
+  {
+    "name": "Linfocitos",
+    "abbreviation": "RAL",
+    "category": "hemograma",
+    "specimen": "sangre",
+    "unit": "xmm3",
+    "reference_range_min": 1000,
+    "reference_range_max": 4800,
+    "is_calculated": false
+  },
+  {
+    "name": "Monocitos",
+    "abbreviation": "RAM",
+    "category": "hemograma",
+    "specimen": "sangre",
+    "unit": "xmm3",
+    "reference_range_max": 800,
+    "is_calculated": false
+  },
+  {
+    "name": "Eosinofilos",
+    "abbreviation": "RAE",
+    "category": "hemograma",
+    "specimen": "sangre",
+    "unit": "xmm3",
+    "reference_range_max": 450,
+    "is_calculated": false
+  },
+  {
+    "name": "Basofilos",
+    "abbreviation": "RAB",
+    "category": "hemograma",
+    "specimen": "sangre",
+    "unit": "xmm3",
+    "reference_range_max": 200,
     "is_calculated": false
   },
   {
@@ -102,16 +156,14 @@
   },
   {
     "name": "Colesterol Total",
-    "abbreviation": "CHOL",
     "category": "metabolismo",
     "specimen": "sangre",
     "unit": "mg/dL",
-    "reference_range_max": 199,
+    "reference_range_max": 200,
     "is_calculated": false
   },
   {
     "name": "Colesterol HDL",
-    "abbreviation": "HDL",
     "category": "metabolismo",
     "specimen": "sangre",
     "unit": "mg/dL",
@@ -120,11 +172,10 @@
   },
   {
     "name": "Colesterol LDL",
-    "abbreviation": "LDL",
     "category": "metabolismo",
     "specimen": "sangre",
     "unit": "mg/dL",
-    "reference_range_max": 99,
+    "reference_range_max": 100,
     "is_calculated": false
   },
   {
@@ -132,6 +183,7 @@
     "category": "metabolismo",
     "specimen": "sangre",
     "unit": "mg/dL",
+    "reference_range_max": 150,
     "is_calculated": false
   },
   {
@@ -188,8 +240,8 @@
     "category": "electrolitos",
     "specimen": "sangre",
     "unit": "mEq/L",
-    "reference_range_min": 3.5,
-    "reference_range_max": 5.1,
+    "reference_range_min": 8.3,
+    "reference_range_max": 10.6,
     "is_calculated": false
   },
   {
@@ -198,7 +250,7 @@
     "category": "electrolitos",
     "specimen": "sangre",
     "unit": "mEq/L",
-    "reference_range_min": 3.5,
+    "reference_range_min": 2.4,
     "reference_range_max": 5.1,
     "is_calculated": false
   },
@@ -208,8 +260,67 @@
     "category": "electrolitos",
     "specimen": "sangre",
     "unit": "mEq/L",
-    "reference_range_min": 3.5,
+    "is_calculated": false
+  },
+  {
+    "name": "Proteina totales",
+    "category": "hepatico",
+    "specimen": "sangre",
+    "unit": "g/dL",
+    "reference_range_min": 5.7,
+    "reference_range_max": 8.2,
+    "is_calculated": false
+  },
+  {
+    "name": "Albumina",
+    "category": "hepatico",
+    "specimen": "sangre",
+    "unit": "g/dL",
+    "reference_range_min": 3.4,
     "reference_range_max": 5.1,
+    "is_calculated": false
+  },
+  {
+    "name": "Bilirrubina total",
+    "category": "hepatico",
+    "specimen": "sangre",
+    "unit": "mg/dL",
+    "reference_range_max": 1.2,
+    "is_calculated": false
+  },
+  {
+    "name": "Bilirrubina directa",
+    "category": "hepatico",
+    "specimen": "sangre",
+    "unit": "mg/dL",
+    "reference_range_max": 0.3,
+    "is_calculated": false
+  },
+  {
+    "name": "Bilirrubina indirecta",
+    "category": "hepatico",
+    "specimen": "sangre",
+    "unit": "mg/dL",
+    "reference_range_min": 0.3,
+    "reference_range_max": 1.1,
+    "is_calculated": false
+  },
+  {
+    "name": "Fosfatas alcalinas",
+    "category": "hepatico",
+    "specimen": "sangre",
+    "unit": "U/L",
+    "reference_range_min": 46,
+    "reference_range_max": 116,
+    "is_calculated": false
+  },
+  {
+    "name": "Gamma glutamil transferasa",
+    "abbreviation": "GGT",
+    "category": "hepatico",
+    "specimen": "sangre",
+    "unit": "U/L",
+    "reference_range_max": 73,
     "is_calculated": false
   },
   {
@@ -218,7 +329,6 @@
     "category": "hepatico",
     "specimen": "sangre",
     "unit": "U/L",
-    "reference_range_min": 0,
     "reference_range_max": 40,
     "is_calculated": false
   },
@@ -230,15 +340,6 @@
     "unit": "U/L",
     "reference_range_min": 7,
     "reference_range_max": 40,
-    "is_calculated": false
-  },
-  {
-    "name": "Albumina",
-    "category": "hepatico",
-    "specimen": "sangre",
-    "unit": "g/dL",
-    "reference_range_min": 3.4,
-    "reference_range_max": 5.1,
     "is_calculated": false
   },
   {
@@ -292,7 +393,7 @@
     "name": "Creatinina",
     "category": "renal",
     "specimen": "sangre",
-    "unit": "U/L",
+    "unit": "mg/dL",
     "reference_range_min": 0.64,
     "reference_range_max": 1.23,
     "is_calculated": false
@@ -302,9 +403,9 @@
     "abbreviation": "BUN",
     "category": "renal",
     "specimen": "sangre",
-    "unit": "U/L",
-    "reference_range_min": 120,
-    "reference_range_max": 246,
+    "unit": "mg/dL",
+    "reference_range_min": 9,
+    "reference_range_max": 23,
     "is_calculated": false
   },
   {
@@ -321,5 +422,60 @@
     "category": "renal",
     "specimen": "sangre",
     "is_calculated": true
+  },
+  {
+    "name": "BUN/CREA",
+    "category": "renal",
+    "specimen": "sangre",
+    "is_calculated": true
+  },
+  {
+    "name": "Cortisol",
+    "category": "endocrino",
+    "specimen": "sangre",
+    "unit": "ug/dL",
+    "is_calculated": false
+  },
+  {
+    "name": "T4 Libre",
+    "category": "endocrino",
+    "specimen": "sangre",
+    "unit": "ng/dL",
+    "reference_range_min": 0.93,
+    "reference_range_max": 1.7,
+    "is_calculated": false
+  },
+  {
+    "name": "TSH",
+    "category": "endocrino",
+    "specimen": "sangre",
+    "unit": "uUI/mL",
+    "reference_range_min": 0.55,
+    "reference_range_max": 4.78,
+    "is_calculated": false
+  },
+  {
+    "name": "Renina",
+    "specimen": "sangre",
+    "unit": "pg/mL",
+    "reference_range_min": 2.15,
+    "reference_range_max": 28.6,
+    "is_calculated": false
+  },
+  {
+    "name": "Densidad",
+    "specimen": "orina",
+    "unit": "mg/dL",
+    "reference_range_min": 1.003,
+    "reference_range_max": 1.035,
+    "is_calculated": false
+  },
+  {
+    "name": "PH",
+    "specimen": "orina",
+    "unit": "mg/dL",
+    "reference_range_min": 4.5,
+    "reference_range_max": 8,
+    "is_calculated": false
   }
 ]
