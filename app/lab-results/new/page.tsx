@@ -89,16 +89,32 @@ export default function NewLabResultPage() {
     field: "labTestId" | "value",
     value: string,
   ) {
-    setRows((current) =>
-      current.map((row) =>
+    setRows((current) => {
+      const updatedRows = current.map((row) =>
         row.id === id
           ? {
               ...row,
               [field]: value,
             }
           : row,
-      ),
-    );
+      );
+
+      // When a test is selected, automatically add a new empty row.
+      if (field === "labTestId" && value) {
+        const currentRow = current.find((row) => row.id === id);
+
+        // Only add a row when this was previously an empty row.
+        if (currentRow?.labTestId === "") {
+          updatedRows.push({
+            id: crypto.randomUUID(),
+            labTestId: "",
+            value: "",
+          });
+        }
+      }
+
+      return updatedRows;
+    });
   }
 
   function getLabTest(labTestId: string) {
@@ -300,15 +316,30 @@ export default function NewLabResultPage() {
                           </option>
 
                           {labTests
-                            .filter(
-                              (test) => !test.is_calculated,
-                            )
+                            .filter((test) => {
+                              if (test.is_calculated) {
+                                return false;
+                              }
+
+                              // Keep the currently selected test visible
+                              if (test.id === row.labTestId) {
+                                return true;
+                              }
+
+                              // Hide tests selected in another row
+                              return !rows.some(
+                                (otherRow) =>
+                                  otherRow.id !== row.id &&
+                                  otherRow.labTestId === test.id,
+                              );
+                            })
                             .map((test) => (
                               <option
                                 key={test.id}
                                 value={test.id}
                               >
-                                {test.name} {test.abbreviation ? `(${test.abbreviation})` : ""}
+                                {test.name}{" "}
+                                {test.abbreviation ? `(${test.abbreviation})` : ""}
                               </option>
                             ))}
                         </select>

@@ -23,7 +23,7 @@
     "name": "VCM",
     "category": "hemograma",
     "specimen": "sangre",
-    "unit": "fL",
+    "unit": "fl",
     "reference_range_min": 80,
     "reference_range_max": 100,
     "is_calculated": false
@@ -460,6 +460,14 @@
     "unit": "pg/mL",
     "reference_range_min": 2.15,
     "reference_range_max": 28.6,
+    "is_calculated": false
+  },
+  {
+    "name": "Aldosterona",
+    "specimen": "sangre",
+    "unit": "pg/mL",
+    "reference_range_min": 28,
+    "reference_range_max": 239,
     "is_calculated": false
   },
   {

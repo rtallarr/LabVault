@@ -220,7 +220,7 @@ export async function GET() {
   >();
 
   for (const test of data) {
-    const category = test.category ?? "Other";
+    const category = test.category ?? "Otros";
 
     const measurements = test.lab_results
       .filter((result) => result.user_id === user.id)
