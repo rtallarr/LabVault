@@ -121,6 +121,26 @@ export default function NewLabResultPage() {
     return labTests.find((test) => test.id === labTestId);
   }
 
+  const completedRows = rows.filter(
+    (row) => row.labTestId && row.value !== "",
+  );
+
+  function getSubmitLabel() {
+    const count = rows.filter(
+      (row) => row.labTestId && row.value !== "",
+    ).length;
+
+    if (submitting) {
+      return "Adding...";
+    }
+
+    if (count === 0) {
+      return "Add results";
+    }
+
+    return `Add ${count} result${count === 1 ? "" : "s"}`;
+  }
+
   async function handleSubmit(
     event: FormEvent<HTMLFormElement>,
   ) {
@@ -128,8 +148,19 @@ export default function NewLabResultPage() {
 
     setError(null);
 
+    const completedRows = rows.filter(
+      (row) => row.labTestId && row.value !== "",
+    );
+
+    if (completedRows.length === 0) {
+      setError("Please add at least one test result.");
+      return;
+    }
+
     const incompleteRow = rows.some(
-      (row) => !row.labTestId || row.value === "",
+      (row) =>
+        (row.labTestId && row.value === "") ||
+        (!row.labTestId && row.value !== ""),
     );
 
     if (incompleteRow) {
@@ -138,10 +169,10 @@ export default function NewLabResultPage() {
     }
 
     const duplicateTests = new Set(
-      rows.map((row) => row.labTestId),
+      completedRows.map((row) => row.labTestId),
     );
 
-    if (duplicateTests.size !== rows.length) {
+    if (duplicateTests.size !== completedRows.length) {
       setError("The same lab test cannot be added twice.");
       return;
     }
@@ -157,7 +188,7 @@ export default function NewLabResultPage() {
         body: JSON.stringify({
           measured_at: measuredAt,
           healthcare_provider: healthcareProvider || null,
-          results: rows.map((row) => ({
+          results: completedRows.map((row) => ({
             lab_test_id: row.labTestId,
             value: Number(row.value),
           })),
@@ -416,12 +447,10 @@ export default function NewLabResultPage() {
 
             <button
               type="submit"
-              disabled={submitting}
+              disabled={submitting || completedRows.length === 0}
               className="rounded-lg bg-white px-4 py-2.5 text-sm font-medium text-black transition hover:bg-neutral-200 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              {submitting
-                ? "Adding..."
-                : `Add ${rows.length} result${rows.length === 1 ? "" : "s"}`}
+              {getSubmitLabel()}
             </button>
           </div>
         </div>
