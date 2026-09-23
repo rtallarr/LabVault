@@ -2,33 +2,8 @@
 
 import Link from "next/link";
 import { Fragment, useEffect, useState } from "react";
-
-type Measurement = {
-  id: string;
-  value: number;
-  measured_at: string;
-};
-
-type LabTest = {
-  id: string;
-  name: string;
-  abbreviation: string | null;
-  specimen: string | null;
-  unit: string | null;
-  reference_range_min: number | null;
-  reference_range_max: number | null;
-  measurements: Measurement[];
-};
-
-type LabCategory = {
-  category: string;
-  tests: LabTest[];
-};
-
-type LabSpecimen = {
-  specimen: string;
-  categories: LabCategory[];
-};
+import { LabResultsTable } from "@/app/components/lab-result-table";
+import type { LabCategory, LabSpecimen } from "@/app/types/labs";
 
 function formatDate(date: string) {
   return new Date(date).toLocaleDateString("en-US", {
@@ -42,6 +17,9 @@ export default function LabResultsPage() {
   const [results, setResults] = useState<LabCategory[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [shareUrl, setShareUrl] = useState<string | null>(null);
+  const [sharing, setSharing] = useState(false);
+  const [shareCopied, setShareCopied] = useState(false);
 
   useEffect(() => {
     async function loadResults() {
@@ -68,6 +46,34 @@ export default function LabResultsPage() {
 
     loadResults();
   }, []);
+
+  async function createShareLink() {
+    setSharing(true);
+    setShareCopied(false);
+
+    try {
+      const response = await fetch("/api/lab-shares", { method: "POST" });
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to create share link");
+      }
+
+      setShareUrl(`${window.location.origin}/share/${data.token}`);
+    } catch (error) {
+      setError(
+        error instanceof Error ? error.message : "Failed to create share link",
+      );
+    } finally {
+      setSharing(false);
+    }
+  }
+
+  async function copyShareLink() {
+    if (!shareUrl) return;
+    await navigator.clipboard.writeText(shareUrl);
+    setShareCopied(true);
+  }
 
   if (loading) {
     return (
@@ -128,21 +134,52 @@ export default function LabResultsPage() {
       <div className="mb-8 flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight text-white">
-            Lab Results
+            Resultados de laboratorio
           </h1>
 
           <p className="mt-1 text-sm text-neutral-500">
-            Your laboratory test history
+            Tu historial de resultados de laboratorio
           </p>
         </div>
 
-        <Link
-          href="/lab-results/new"
-          className="rounded-lg bg-white px-4 py-2.5 text-sm font-medium text-black transition hover:bg-neutral-200"
-        >
-          Add result
-        </Link>
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={createShareLink}
+            disabled={sharing || results.length === 0}
+            className="rounded-lg border border-neutral-700 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-neutral-900 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {sharing ? "Creando link..." : "Compartir"}
+          </button>
+          <Link
+            href="/lab-results/new"
+            className="rounded-lg bg-white px-4 py-2.5 text-sm font-medium text-black transition hover:bg-neutral-200"
+          >
+            Agregar
+          </Link>
+        </div>
       </div>
+
+      {shareUrl && (
+        <div className="mb-6 rounded-lg border border-neutral-800 bg-neutral-950 p-4">
+          <div className="mt-3 flex gap-2">
+            <input
+              readOnly
+              value={shareUrl}
+              aria-label="Share link"
+              className="min-w-0 flex-1 rounded-md border border-neutral-800 bg-neutral-900 px-3 py-2 text-sm text-neutral-400 outline-none"
+            />
+            <button
+              type="button"
+              onClick={copyShareLink}
+              className="rounded-md bg-white px-3 py-2 text-sm font-medium text-black transition hover:bg-neutral-200"
+            >
+              {shareCopied ? "Copied" : "Copy"}
+            </button>
+          </div>
+          <p className="mt-2 text-xs text-neutral-600">This link expires in 30 days.</p>
+        </div>
+      )}
 
       {error && (
         <div
@@ -160,8 +197,7 @@ export default function LabResultsPage() {
           </h2>
 
           <p className="mx-auto mt-1 max-w-sm text-sm text-neutral-500">
-            Add your first laboratory result to start tracking your health
-            data.
+            Add your first laboratory result to start tracking your health data.
           </p>
 
           <Link
@@ -172,147 +208,7 @@ export default function LabResultsPage() {
           </Link>
         </div>
       ) : (
-        <div className="space-y-8">
-          {specimens.map((specimen) => (
-            <section key={specimen.specimen}>
-              {/* Specimen separator */}
-              <div className="mb-3">
-                <h2 className="text-sm font-medium uppercase tracking-wider text-neutral-400">
-                  {specimen.specimen}
-                </h2>
-              </div>
-
-              <div className="overflow-hidden rounded-xl border border-neutral-800 bg-neutral-950">
-                <div className="overflow-x-auto">
-                  <table className="w-full min-w-[720px] text-left">
-                    <thead className="border-b border-neutral-800 bg-neutral-900/50">
-                      <tr>
-                        <th className="px-4 py-3 text-xs font-medium uppercase tracking-wider text-neutral-500">
-                          Test
-                        </th>
-
-                        <th className="px-4 py-3 text-xs font-medium uppercase tracking-wider text-neutral-500">
-                          Latest
-                        </th>
-
-                        <th className="px-4 py-3 text-xs font-medium uppercase tracking-wider text-neutral-500">
-                          Previous
-                        </th>
-
-                        <th className="hidden px-4 py-3 text-xs font-medium uppercase tracking-wider text-neutral-500 lg:table-cell">
-                          Older
-                        </th>
-
-                        <th className="px-4 py-3 text-xs font-medium uppercase tracking-wider text-neutral-500">
-                          Reference
-                        </th>
-                      </tr>
-                    </thead>
-
-                    <tbody>
-                      {specimen.categories.map((category) => (
-                        <Fragment key={category.category}>
-                          <tr
-                            key={category.category}
-                            className="border-y border-neutral-800 bg-neutral-900/30"
-                          >
-                            <td
-                              colSpan={5}
-                              className="px-4 py-2 text-[11px] font-medium uppercase tracking-wider text-neutral-500"
-                            >
-                              {category.category}
-                            </td>
-                          </tr>
-
-                          {category.tests.map((test) => {
-                            const hasReferenceRange =
-                              test.reference_range_min !== null ||
-                              test.reference_range_max !== null;
-
-                            const referenceRange = hasReferenceRange
-                              ? `${test.reference_range_min ?? "—"} – ${
-                                  test.reference_range_max ?? "—"
-                                }`
-                              : "—";
-
-                            return (
-                              <tr
-                                key={test.id}
-                                className="border-b border-neutral-800 transition last:border-b-0 hover:bg-neutral-900"
-                              >
-                                <td className="px-4 py-3">
-                                  <div className="font-medium text-white">
-                                    {test.name}
-                                  </div>
-
-                                  {test.abbreviation && (
-                                    <div className="mt-0.5 text-xs text-neutral-600">
-                                      {test.abbreviation}
-                                    </div>
-                                  )}
-                                </td>
-
-                                {[0, 1, 2].map((index) => {
-                                  const measurement =
-                                    test.measurements[index];
-
-                                  return (
-                                    <td
-                                      key={index}
-                                      className={`px-4 py-3 ${
-                                        index === 2
-                                          ? "hidden lg:table-cell"
-                                          : ""
-                                      }`}
-                                    >
-                                      {measurement ? (
-                                        <>
-                                          <div className="font-medium tabular-nums text-white">
-                                            {measurement.value}
-
-                                            {test.unit && (
-                                              <span className="ml-1 text-xs font-normal text-neutral-500">
-                                                {test.unit}
-                                              </span>
-                                            )}
-                                          </div>
-
-                                          <div className="mt-0.5 text-[11px] text-neutral-600">
-                                            {formatDate(
-                                              measurement.measured_at,
-                                            )}
-                                          </div>
-                                        </>
-                                      ) : (
-                                        <span className="text-neutral-700">
-                                          —
-                                        </span>
-                                      )}
-                                    </td>
-                                  );
-                                })}
-
-                                <td className="px-4 py-3 text-sm tabular-nums text-neutral-500">
-                                  {referenceRange}
-
-                                  {test.unit && (
-                                    <span className="ml-1 text-xs text-neutral-600">
-                                      {test.unit}
-                                    </span>
-                                  )}
-                                </td>
-                              </tr>
-                            );
-                          })}
-                        </Fragment>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </section>
-          ))}
-        </div>
+        <LabResultsTable results={results} />
       )}
     </main>
   );
