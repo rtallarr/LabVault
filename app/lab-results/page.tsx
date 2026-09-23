@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Fragment, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { LabResultsTable } from "@/app/components/lab-result-table";
 import type { LabCategory, LabSpecimen } from "@/app/types/labs";
 
@@ -177,7 +177,7 @@ export default function LabResultsPage() {
               {shareCopied ? "Copied" : "Copy"}
             </button>
           </div>
-          <p className="mt-2 text-xs text-neutral-600">This link expires in 30 days.</p>
+          <p className="mt-2 text-xs text-neutral-600">Este link expira en 7 dias</p>
         </div>
       )}
 
